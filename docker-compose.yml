@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: lofi_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lofi_server
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: lofi_backend
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/lofi_server
+      JWT_SECRET: orbital-access-portal-secret-2026
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: lofi_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

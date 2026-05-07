@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-black: #0a0a0a;
+  --color-accent-blue: #7aa2f7;
+  --color-accent-purple: #bb9af7;
+  --color-accent-cyan: #7dcfff;
+  --color-accent-magenta: #f7768e;
+  
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-satoshi: "Satoshi", "Inter", sans-serif;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    background-color: #050508;
+  }
+  
+  body {
+    @apply bg-space-black text-slate-200 overflow-hidden font-satoshi;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* High-Performance Panels (No blur on mobile, minimal on desktop) */
+.glass {
+  @apply bg-[#0f0f14]/80 border border-white/5 shadow-2xl;
+}
+
+@media (min-width: 1024px) {
+  .glass {
+    backdrop-filter: blur(20px);
+  }
+}
+
+.glass-bright {
+  @apply bg-[#1a1b26]/60 border border-white/10 shadow-2xl;
+}
+
+@media (min-width: 1024px) {
+  .glass-bright {
+    backdrop-filter: blur(30px);
+  }
+}
+
+.text-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(122, 162, 247, 0.1);
+  border-radius: 10px;
+}
