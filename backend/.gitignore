@@ -1,0 +1,13 @@
+# Binaries
+main
+backend
+bin/
+
+# Environment
+.env
+*.env.local
+
+# Docs
+docs/docs.go
+docs/swagger.json
+docs/swagger.yaml

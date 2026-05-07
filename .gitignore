@@ -1,1 +1,19 @@
+# AI Instructions
 GEMINI.md
+
+# Environment variables
+.env
+*.env.local
+
+# Go
+backend/backend
+backend/main
+backend/bin/
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+*.swp
