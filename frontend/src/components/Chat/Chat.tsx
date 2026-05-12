@@ -16,7 +16,7 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ stationId, username }) => {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message['payload'][]>([]);
   const [inputText, setInputText] = useState('');
   const ws = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -27,7 +27,7 @@ const Chat: React.FC<ChatProps> = ({ stationId, username }) => {
 
   useEffect(() => {
     let socket: WebSocket | null = null;
-    let timeoutId: any = null;
+    let timeoutId: number | null = null;
     let isMounted = true;
 
     const connect = () => {
@@ -44,14 +44,14 @@ const Chat: React.FC<ChatProps> = ({ stationId, username }) => {
           if (msg.type === 'chat') {
             setMessages((prev) => [...prev, msg.payload]);
           }
-        } catch (e) {
-          console.error('Failed to parse WS message', e);
+        } catch (error) {
+          console.error('Failed to parse WS message', error);
         }
       };
 
       socket.onclose = () => {
         if (isMounted) {
-          timeoutId = setTimeout(connect, 3000);
+          timeoutId = window.setTimeout(connect, 3000);
         }
       };
 
@@ -74,7 +74,7 @@ const Chat: React.FC<ChatProps> = ({ stationId, username }) => {
           s.close();
         } else if (s.readyState === WebSocket.CONNECTING) {
           s.onopen = () => {
-            try { s.close(); } catch (e) {}
+            try { s.close(); } catch { /* Ignore close error */ }
           };
         }
       }

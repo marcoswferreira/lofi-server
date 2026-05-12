@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchInvitations, updateInvitation } from '../../api/client';
 import type { PlaylistShare } from '../../api/client';
 import { Check, X, Bell } from 'lucide-react';
@@ -12,27 +12,28 @@ const Invitations: React.FC<InvitationsProps> = ({ onStatusChange }) => {
   const [invitations, setInvitations] = useState<PlaylistShare[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const loadInvitations = async () => {
-    try {
-      const data = await fetchInvitations();
-      setInvitations(data);
-    } catch (err) {
-      console.error('Failed to load invitations', err);
-    }
-  };
+  const loadInvitations = useCallback(() => {
+    fetchInvitations()
+      .then(data => {
+        setInvitations(data);
+      })
+      .catch(err => {
+        console.error('Failed to load invitations', err);
+      });
+  }, []);
 
   useEffect(() => {
     loadInvitations();
     const interval = setInterval(loadInvitations, 30000); // Poll every 30s
     return () => clearInterval(interval);
-  }, []);
+  }, [loadInvitations]);
 
   const handleAction = async (id: number, status: 'accepted' | 'rejected') => {
     try {
       await updateInvitation(id, status);
       setInvitations(prev => prev.filter(inv => inv.id !== id));
       onStatusChange();
-    } catch (err) {
+    } catch {
       alert('Error updating invitation');
     }
   };

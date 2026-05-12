@@ -7,15 +7,19 @@ const Pomodoro: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    let interval: any = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     if (isActive) {
       interval = setInterval(() => {
         if (seconds > 0) setSeconds(seconds - 1);
         else if (minutes > 0) { setMinutes(minutes - 1); setSeconds(59); }
         else { setIsActive(false); }
       }, 1000);
-    } else clearInterval(interval);
-    return () => clearInterval(interval);
+    } else if (interval) {
+      clearInterval(interval);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isActive, minutes, seconds]);
 
   const progress = ((25 * 60 - (minutes * 60 + seconds)) / (25 * 60)) * 100;

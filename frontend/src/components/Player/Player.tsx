@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import YouTube from 'react-youtube';
-import type { YouTubeProps } from 'react-youtube';
+import type { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { fetchStationState } from '../../api/client';
 import type { StationState } from '../../api/client';
 import { Play, Pause, Volume2, Headphones } from 'lucide-react';
@@ -12,24 +12,25 @@ interface PlayerProps {
 
 const Player: React.FC<PlayerProps> = ({ stationId }) => {
   const [state, setState] = useState<StationState | null>(null);
-  const [player, setPlayer] = useState<any>(null);
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [volume, setVolume] = useState(50);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const refreshState = async () => {
-    try {
-      const newState = await fetchStationState(stationId);
-      setState(newState);
-    } catch (err) {
-      console.error('Failed to sync state', err);
-    }
-  };
+  const refreshState = useCallback(() => {
+    fetchStationState(stationId)
+      .then(newState => {
+        setState(newState);
+      })
+      .catch(err => {
+        console.error('Failed to sync state', err);
+      });
+  }, [stationId]);
 
   useEffect(() => {
     refreshState();
     const interval = setInterval(refreshState, 15000);
     return () => clearInterval(interval);
-  }, [stationId]);
+  }, [refreshState]);
 
   const onReady: YouTubeProps['onReady'] = (event) => {
     setPlayer(event.target);

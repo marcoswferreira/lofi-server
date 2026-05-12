@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchStations, createStation, updateStation, deleteStation, shareStation } from '../../api/client';
 import type { Station, Track } from '../../api/client';
 import { Plus, Trash2, Edit2, Save, X, Music, Radio, Share2 } from 'lucide-react';
@@ -15,20 +15,22 @@ const Admin: React.FC = () => {
   });
   const [shareEmail, setShareEmail] = useState<{[key: string]: string}>({});
 
-  useEffect(() => {
-    loadStations();
+  const loadStations = useCallback(() => {
+    fetchStations()
+      .then(data => {
+        setStations(data);
+      })
+      .catch(err => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  const loadStations = async () => {
-    try {
-      const data = await fetchStations();
-      setStations(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    loadStations();
+  }, [loadStations]);
 
   const handleSave = async () => {
     try {
@@ -40,7 +42,7 @@ const Admin: React.FC = () => {
       setEditingId(null);
       setFormData({ name: '', description: '', playlist: [] });
       loadStations();
-    } catch (err) {
+    } catch {
       alert('Error saving station');
     }
   };
@@ -50,7 +52,7 @@ const Admin: React.FC = () => {
     try {
       await deleteStation(id);
       loadStations();
-    } catch (err) {
+    } catch {
       alert('Error deleting station');
     }
   };
@@ -62,7 +64,7 @@ const Admin: React.FC = () => {
       await shareStation(id, email);
       alert('Invitation sent!');
       setShareEmail({ ...shareEmail, [id]: '' });
-    } catch (err) {
+    } catch {
       alert('Error sharing: User not found or already shared.');
     }
   };

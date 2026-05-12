@@ -134,7 +134,7 @@ export interface AuthResponse {
   user: User;
 }
 
-export async function register(data: any): Promise<AuthResponse> {
+export async function register(data: Partial<User> & { password?: string }): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -144,7 +144,7 @@ export async function register(data: any): Promise<AuthResponse> {
   return response.json();
 }
 
-export async function login(data: any): Promise<AuthResponse> {
+export async function login(data: { email?: string; password?: string }): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

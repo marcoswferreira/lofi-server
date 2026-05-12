@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { fetchStations } from './api/client'
 import type { Station, User } from './api/client'
 import Player from './components/Player/Player'
@@ -19,18 +19,18 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isAdminMode, setIsAdminMode] = useState(false)
 
-  const loadStations = () => {
+  const loadStations = useCallback(() => {
     fetchStations().then(data => {
       setStations(data)
       if (data.length > 0 && (!currentStationId || !data.find(s => s.id === currentStationId))) {
         setCurrentStationId(data[0].id)
       }
     })
-  }
+  }, [currentStationId])
 
   useEffect(() => {
     loadStations()
-  }, [user])
+  }, [user, loadStations])
 
   const handleAuth = (user: User, token: string) => {
     setUser(user)

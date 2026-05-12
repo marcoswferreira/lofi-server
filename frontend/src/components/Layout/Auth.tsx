@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { login, register } from '../../api/client';
+import type { User } from '../../api/client';
 import { Mail, Lock, User as UserIcon, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AuthProps {
-  onAuth: (user: any, token: string) => void;
+  onAuth: (user: User, token: string) => void;
 }
 
 const Auth: React.FC<AuthProps> = ({ onAuth }) => {
@@ -20,8 +21,9 @@ const Auth: React.FC<AuthProps> = ({ onAuth }) => {
         ? await login({ email: formData.email, password: formData.password })
         : await register(formData);
       onAuth(res.user, res.token);
-    } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
+      setError(errorMessage);
     }
   };
 
