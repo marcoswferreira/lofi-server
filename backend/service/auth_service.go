@@ -28,7 +28,6 @@ func NewAuthService(st store.StoreInterface) *AuthService {
 	}
 }
 
-
 func (s *AuthService) Register(ctx context.Context, req models.RegisterRequest) (*models.AuthResponse, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {

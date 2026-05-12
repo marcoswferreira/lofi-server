@@ -73,7 +73,7 @@ func TestHubRun(t *testing.T) {
 	// Send 2 messages, second one should trigger default (disconnect)
 	h.broadcast <- Message{Type: "chat", StationID: "s1", Payload: "msg 1"}
 	h.broadcast <- Message{Type: "chat", StationID: "s1", Payload: "msg 2"}
-	
+
 	time.Sleep(50 * time.Millisecond)
 	h.mu.RLock()
 	if _, ok := h.stations["s1"][c4]; ok {
@@ -105,7 +105,7 @@ func TestServeWs_Success(t *testing.T) {
 
 	// Convert http URL to ws URL
 	wsURL := "ws" + server.URL[4:] + "?station=s1"
-	
+
 	dialer := websocket.Dialer{}
 	conn, _, err := dialer.Dial(wsURL, nil)
 	if err != nil {

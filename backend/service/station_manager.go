@@ -69,7 +69,7 @@ func (sm *StationManager) updateStation(runtime *stationRuntime) {
 		currentTrack := runtime.station.Playlist[runtime.currentIndex]
 		if currentTrack.Duration <= 0 {
 			// Prevent infinite loop: if duration is invalid, just stay on this track
-			// but advance to next to try to find a valid one? 
+			// but advance to next to try to find a valid one?
 			// For now, let's just break to avoid hang.
 			break
 		}

@@ -10,11 +10,11 @@ import (
 
 // MockStore implements store.StoreInterface for testing
 type MockStore struct {
-	users         map[string]*models.User // email -> user
-	passwords     map[string]string      // email -> passwordHash
-	stations      map[string]models.Station
-	shares        []models.PlaylistShare
-	failNext      bool
+	users     map[string]*models.User // email -> user
+	passwords map[string]string       // email -> passwordHash
+	stations  map[string]models.Station
+	shares    []models.PlaylistShare
+	failNext  bool
 }
 
 func (m *MockStore) CreateUser(ctx context.Context, username, email, passwordHash string) (*models.User, error) {
@@ -39,8 +39,8 @@ func (m *MockStore) GetUserByEmail(ctx context.Context, email string) (*models.U
 	return user, m.passwords[email], nil
 }
 
-func (m *MockStore) SaveStation(ctx context.Context, station models.Station) error { return nil }
-func (m *MockStore) DeleteStation(ctx context.Context, id string) error           { return nil }
+func (m *MockStore) SaveStation(ctx context.Context, station models.Station) error       { return nil }
+func (m *MockStore) DeleteStation(ctx context.Context, id string) error                  { return nil }
 func (m *MockStore) CreateShare(ctx context.Context, stationID string, userID int) error { return nil }
 func (m *MockStore) UpdateShareStatus(ctx context.Context, shareID int, status string) error {
 	return nil

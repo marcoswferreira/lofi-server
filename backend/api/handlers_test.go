@@ -20,7 +20,7 @@ func TestGetStations(t *testing.T) {
 	h := NewHandlers(sm, auth, st)
 
 	sm.AddStation(models.Station{ID: "global", Name: "Global"})
-	
+
 	t.Run("Anonymous", func(t *testing.T) {
 		req := httptest.NewRequest("GET", "/stations", nil)
 		rr := httptest.NewRecorder()
@@ -36,7 +36,7 @@ func TestGetStations(t *testing.T) {
 		res, _ := auth.Register(context.Background(), models.RegisterRequest{
 			Username: "user1", Email: "u1@test.com", Password: "pwd",
 		})
-		
+
 		// Create a shared station in mock
 		st.shares[1] = models.PlaylistShare{StationID: "shared1", UserID: res.User.ID, Status: "accepted"}
 		sm.AddStation(models.Station{ID: "shared1", Name: "Shared"})
@@ -78,11 +78,11 @@ func TestCreateStation(t *testing.T) {
 func TestGetStationState(t *testing.T) {
 	sm := service.NewStationManager()
 	sm.AddStation(models.Station{
-		ID:   "s1",
-		Name: "S1",
+		ID:       "s1",
+		Name:     "S1",
 		Playlist: []models.Track{{ID: "t1", Title: "T1", Duration: time.Minute}},
 	})
-	
+
 	h := NewHandlers(sm, nil, nil)
 
 	req := httptest.NewRequest("GET", "/stations/s1/state", nil)
@@ -213,7 +213,7 @@ func TestSharingHandlers(t *testing.T) {
 	resTarget, _ := auth.Register(context.Background(), models.RegisterRequest{
 		Username: "target", Email: "target@test.com", Password: "hash",
 	})
-	
+
 	token := resOwner.Token
 	targetToken := resTarget.Token
 	ownerID := resOwner.User.ID

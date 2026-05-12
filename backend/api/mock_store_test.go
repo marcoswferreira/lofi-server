@@ -8,10 +8,10 @@ import (
 )
 
 type MockStore struct {
-	users     map[string]*models.User
-	passwords map[string]string
-	stations  map[string]models.Station
-	shares    map[int]models.PlaylistShare
+	users       map[string]*models.User
+	passwords   map[string]string
+	stations    map[string]models.Station
+	shares      map[int]models.PlaylistShare
 	nextShareID int
 }
 
@@ -24,7 +24,9 @@ func (m *MockStore) CreateUser(ctx context.Context, username, email, passwordHas
 
 func (m *MockStore) GetUserByEmail(ctx context.Context, email string) (*models.User, string, error) {
 	u, ok := m.users[email]
-	if !ok { return nil, "", errors.New("not found") }
+	if !ok {
+		return nil, "", errors.New("not found")
+	}
 	return u, m.passwords[email], nil
 }
 
@@ -41,17 +43,19 @@ func (m *MockStore) DeleteStation(ctx context.Context, id string) error {
 func (m *MockStore) CreateShare(ctx context.Context, stationID string, userID int) error {
 	m.nextShareID++
 	m.shares[m.nextShareID] = models.PlaylistShare{
-		ID: m.nextShareID,
+		ID:        m.nextShareID,
 		StationID: stationID,
-		UserID: userID,
-		Status: "pending",
+		UserID:    userID,
+		Status:    "pending",
 	}
 	return nil
 }
 
 func (m *MockStore) UpdateShareStatus(ctx context.Context, shareID int, status string) error {
 	s, ok := m.shares[shareID]
-	if !ok { return errors.New("not found") }
+	if !ok {
+		return errors.New("not found")
+	}
 	s.Status = status
 	m.shares[shareID] = s
 	return nil
