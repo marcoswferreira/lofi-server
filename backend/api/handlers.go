@@ -14,10 +14,10 @@ import (
 type Handlers struct {
 	sm   *service.StationManager
 	auth *service.AuthService
-	st   *store.Store
+	st   store.StoreInterface
 }
 
-func NewHandlers(sm *service.StationManager, auth *service.AuthService, st *store.Store) *Handlers {
+func NewHandlers(sm *service.StationManager, auth *service.AuthService, st store.StoreInterface) *Handlers {
 	return &Handlers{sm: sm, auth: auth, st: st}
 }
 

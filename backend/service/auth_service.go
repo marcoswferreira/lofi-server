@@ -13,20 +13,21 @@ import (
 )
 
 type AuthService struct {
-	store  *store.Store
+	st     store.StoreInterface
 	secret []byte
 }
 
-func NewAuthService(s *store.Store) *AuthService {
+func NewAuthService(st store.StoreInterface) *AuthService {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "super-secret-key"
+		secret = "lofi-secret-key-2026"
 	}
 	return &AuthService{
-		store:  s,
+		st:     st,
 		secret: []byte(secret),
 	}
 }
+
 
 func (s *AuthService) Register(ctx context.Context, req models.RegisterRequest) (*models.AuthResponse, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -34,7 +35,7 @@ func (s *AuthService) Register(ctx context.Context, req models.RegisterRequest) 
 		return nil, err
 	}
 
-	user, err := s.store.CreateUser(ctx, req.Username, req.Email, string(hash))
+	user, err := s.st.CreateUser(ctx, req.Username, req.Email, string(hash))
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +52,7 @@ func (s *AuthService) Register(ctx context.Context, req models.RegisterRequest) 
 }
 
 func (s *AuthService) Login(ctx context.Context, req models.LoginRequest) (*models.AuthResponse, error) {
-	user, hash, err := s.store.GetUserByEmail(ctx, req.Email)
+	user, hash, err := s.st.GetUserByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}

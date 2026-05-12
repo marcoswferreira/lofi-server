@@ -36,8 +36,8 @@ func (sm *StationManager) AddStation(station models.Station) {
 }
 
 func (sm *StationManager) GetState(stationID string) (models.StationState, bool) {
-	sm.mu.RLock()
-	defer sm.mu.RUnlock()
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
 
 	runtime, ok := sm.stations[stationID]
 	if !ok {
@@ -60,9 +60,19 @@ func (sm *StationManager) GetState(stationID string) (models.StationState, bool)
 }
 
 func (sm *StationManager) updateStation(runtime *stationRuntime) {
+	if len(runtime.station.Playlist) == 0 {
+		return
+	}
+
 	now := time.Now()
 	for {
 		currentTrack := runtime.station.Playlist[runtime.currentIndex]
+		if currentTrack.Duration <= 0 {
+			// Prevent infinite loop: if duration is invalid, just stay on this track
+			// but advance to next to try to find a valid one? 
+			// For now, let's just break to avoid hang.
+			break
+		}
 		if now.Sub(runtime.startTime) < currentTrack.Duration {
 			break
 		}

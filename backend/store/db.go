@@ -8,7 +8,19 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/marcoswferreira/lofi-server/backend/models"
 )
+
+type StoreInterface interface {
+	CreateUser(ctx context.Context, username, email, passwordHash string) (*models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, string, error)
+	SaveStation(ctx context.Context, station models.Station) error
+	DeleteStation(ctx context.Context, id string) error
+	CreateShare(ctx context.Context, stationID string, userID int) error
+	UpdateShareStatus(ctx context.Context, shareID int, status string) error
+	GetPendingShares(ctx context.Context, userID int) ([]models.PlaylistShare, error)
+	GetAcceptedStationIDs(ctx context.Context, userID int) ([]string, error)
+}
 
 type Store struct {
 	Pool *pgxpool.Pool
