@@ -85,7 +85,7 @@ func (h *Handlers) CreateStation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.sm.AddStation(station)
-	
+
 	// Persist to DB if store is available
 	if h.st != nil {
 		h.st.SaveStation(r.Context(), station)

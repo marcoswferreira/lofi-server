@@ -24,25 +24,25 @@ type Message struct {
 }
 
 type Client struct {
-	hub  *Hub
-	conn *websocket.Conn
-	send chan []byte
+	hub       *Hub
+	conn      *websocket.Conn
+	send      chan []byte
 	stationID string
 }
 
 type Hub struct {
-	mu        sync.RWMutex
-	stations  map[string]map[*Client]bool
-	broadcast chan Message
-	register  chan *Client
+	mu         sync.RWMutex
+	stations   map[string]map[*Client]bool
+	broadcast  chan Message
+	register   chan *Client
 	unregister chan *Client
 }
 
 func NewHub() *Hub {
 	return &Hub{
-		stations:  make(map[string]map[*Client]bool),
-		broadcast: make(chan Message),
-		register:  make(chan *Client),
+		stations:   make(map[string]map[*Client]bool),
+		broadcast:  make(chan Message),
+		register:   make(chan *Client),
 		unregister: make(chan *Client),
 	}
 }

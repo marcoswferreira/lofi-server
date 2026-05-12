@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Track struct {
-	ID       string        `json:"id"`       // YouTube Video ID
+	ID       string        `json:"id"` // YouTube Video ID
 	Title    string        `json:"title"`
 	Duration time.Duration `json:"duration" swaggertype:"primitive,integer"`
 }

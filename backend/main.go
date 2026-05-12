@@ -32,7 +32,7 @@ import (
 // @BasePath /api
 func main() {
 	ctx := context.Background()
-	
+
 	// Load .env
 	godotenv.Load()
 

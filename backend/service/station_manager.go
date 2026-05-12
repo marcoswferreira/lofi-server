@@ -96,12 +96,12 @@ func (sm *StationManager) GetStationsForUser(userID *int, sharedIDs []string) []
 
 	var stations []models.Station
 	for _, runtime := range sm.stations {
-		// Include global stations (OwnerID == nil) 
+		// Include global stations (OwnerID == nil)
 		// OR private stations if the user is the owner
 		// OR private stations if they are shared and accepted
 		isOwner := userID != nil && runtime.station.OwnerID != nil && *runtime.station.OwnerID == *userID
 		isShared := sharedMap[runtime.station.ID]
-		
+
 		if runtime.station.OwnerID == nil || isOwner || isShared {
 			stations = append(stations, runtime.station)
 		}
@@ -119,8 +119,8 @@ func (sm *StationManager) UpdateStation(id string, station models.Station) bool 
 	}
 
 	runtime.station = station
-	// We keep the current playback progress (currentIndex and startTime) 
-	// unless the playlist has changed significantly. 
+	// We keep the current playback progress (currentIndex and startTime)
+	// unless the playlist has changed significantly.
 	// For simplicity, we just keep them.
 	return true
 }
